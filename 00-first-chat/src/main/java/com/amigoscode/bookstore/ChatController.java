@@ -14,5 +14,9 @@ public class ChatController {
 	}
 
 	// TODO task-5: expose GET /api/chat?question=... that returns BookAssistant.Answer as JSON
+	@GetMapping("/api/chat")
+	public BookAssistant.Answer get(@RequestParam String question) {
+		return bookAssistant.askWithUsage(question);
+	}
 
 }
