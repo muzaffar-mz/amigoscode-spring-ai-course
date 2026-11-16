@@ -26,5 +26,9 @@ public class ChatController {
 	}
 
 	// TODO task-4: expose GET /api/chat/stream?question=... as Server-Sent Events
+	@GetMapping(value = "/api/chat/stream")
+	public Flux<String> stream(@RequestParam String question) {
+		return bookAssistant.stream(question);
+	}
 
 }

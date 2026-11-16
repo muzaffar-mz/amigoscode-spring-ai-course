@@ -30,7 +30,9 @@ public class BookAssistant {
 
 	public BookAssistant(ChatClient.Builder chatClientBuilder) {
 		// TODO task-1: give every request the SYSTEM_PROMPT
+		chatClientBuilder.defaultSystem(SYSTEM_PROMPT);
 		// TODO task-2: default every request to temperature 0.3 and at most 500 tokens
+		chatClientBuilder.defaultOptions(ChatOptions.builder().temperature(0.3).maxTokens(500));
 		this.chatClient = chatClientBuilder.build();
 	}
 
@@ -48,7 +50,12 @@ public class BookAssistant {
 	public String writeBlurb(String bookTitle) {
 		// TODO task-3: ask for a two sentence marketing blurb for the book,
 		// with temperature 1.2 for this request only
-		throw new UnsupportedOperationException("TODO task-3");
+		return chatClient.prompt()
+				.user("Write two sentence marketing blurb for the book " + bookTitle)
+				.options(ChatOptions.builder().temperature(1.2).maxTokens(500))
+				.call().content();
+
+//		throw new UnsupportedOperationException("TODO task-3");
 	}
 
 	/**
@@ -56,7 +63,8 @@ public class BookAssistant {
 	 */
 	public Flux<String> stream(String question) {
 		// TODO task-4: stream the answer instead of calling the model once
-		return Flux.error(new UnsupportedOperationException("TODO task-4"));
+		return chatClient.prompt().user(question).stream().content();
+//		return Flux.error(new UnsupportedOperationException("TODO task-4"));
 	}
 
 	/**
@@ -65,7 +73,11 @@ public class BookAssistant {
 	 */
 	public String followUp(List<Message> history, String question) {
 		// TODO task-5: send the earlier messages, then the new question
-		throw new UnsupportedOperationException("TODO task-5");
+		return chatClient.prompt()
+				.messages(history)
+				.user(question)
+				.call().content();
+//		throw new UnsupportedOperationException("TODO task-5");
 	}
 
 	public Answer askWithUsage(String question) {
